@@ -100,7 +100,7 @@ The breakdown of this payload:
 7. Now the goal is to pad with enough characters to get the lower two bytes to point back at the memory address at the start of logger, to create our recursive function. We are abusing the fact that puts has yet been called, so in the GOT table the upper two bytes are still pointing to the Procedure Linking Table (PLT) table which match the upper two bytes of logger. %65270c
 
 8. Finally, we go to where the destination of the incremental write in step 5 above to complete the successive write technique and right to the GOT table. This works because we stayed in incremental mode all the way to the first %n, after which we could start using positional arguments directly. Note we are only writing a half byte since our padding in step 6 overflowed into the upper halfword %141\$hn.
-9. 
+   
 This payload has accomplished that goal of turning logger into a recursive function, so we now will simply allow it to loop a few times to build up a healthy chain of base pointers to use later on.
 
 After it has looped enough times, it is time to start sending interesting payloads again. This time the goal is to overwrite the return address of the current stack frame of write_log to loop here many times, which will leave our chain of base pointers at consistent positional arguments for our format string.
